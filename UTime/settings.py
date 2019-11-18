@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import pymysql
+import sys
+
+print(sys.version)
 
 pymysql.install_as_MySQLdb()
 
