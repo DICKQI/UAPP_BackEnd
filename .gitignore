@@ -1,0 +1,9 @@
+.idea
+App/Account/migrations
+App/ChatRoom/migrations
+App/FandQ/migrations
+App/Log/migrations
+App/Tailwind/migrations
+
+*.pyc
+venv
