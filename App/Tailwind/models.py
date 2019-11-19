@@ -83,7 +83,7 @@ class TailwindTakeOrder(models.Model):
         ordering = ['-create_time']
 
     def __str__(self):
-        return self.mandatory
+        return self.mandatory.nickname
 
 
 class DealRate(models.Model):
