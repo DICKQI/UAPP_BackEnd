@@ -10,7 +10,7 @@ class RegisterView(APIView):
     def post(self, request):
         '''注册账户'''
         params = request.body
-        jsonParams = json.loads(params)
+        jsonParams = json.loads(params.decode('utf-8'))
         # 检查参数合法性
         user = UserInfo.objects.filter(email__exact=jsonParams.get('email'))
         if user.exists():

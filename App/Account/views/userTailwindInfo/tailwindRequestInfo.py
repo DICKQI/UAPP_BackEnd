@@ -56,7 +56,7 @@ class UserTailwindRequestView(APIView):
         '''
         try:
             user = getUser(email=request.session.get('login'))
-            jsonParam = json.loads(request.body)
+            jsonParam = json.loads((request.body).decode('utf-8'))
 
             taskContent = jsonParam.get('content')
             serviceType = jsonParam.get('type')

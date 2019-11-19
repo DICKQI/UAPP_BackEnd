@@ -17,7 +17,7 @@ class AccountBaseView(APIView):
         :return:
         '''
         try:
-            jsonParams = json.loads(request.body)
+            jsonParams = json.loads((request.body).decode('utf-8'))
             user = UserInfo.objects.filter(
                 Q(email=jsonParams.get('email')) |
                 Q(id=jsonParams.get('id'))
