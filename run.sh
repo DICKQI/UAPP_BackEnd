@@ -31,14 +31,15 @@ case $1 in
     ;;
     "initdatabase")
 #        python3 manage.py makemigrations account FandQ helps log market chatroom tailwind
-        python3 manage.py makemigrations Account Log Tailwind
+        python3 manage.py makemigrations Account Log Tailwind ChatRoom FandQ
 
         python3 manage.py migrate
 
         echo "初始化项目数据库成功"
     ;;
     "makemigrations")
-        python3 manage.py makemigrations ${@:2}
+#        python3 manage.py makemigrations ${@:2}
+        echo ${@:2}
     ;;
     "migrate")
         python3 manage.py migrate
