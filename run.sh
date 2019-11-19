@@ -23,7 +23,7 @@ case $1 in
 
         kill -9 $pid
 
-        uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/Utime.log --module Utime.wsgi &
+        uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/Utime.log --module UTime.wsgi &
 
         echo "UTime重启成功"
 
@@ -38,8 +38,8 @@ case $1 in
         echo "初始化项目数据库成功"
     ;;
     "makemigrations")
-#        python3 manage.py makemigrations ${@:2}
-        echo ${@:2}
+        python3 manage.py makemigrations ${@:2}
+#        echo ${@:2}
     ;;
     "migrate")
         python3 manage.py migrate
@@ -53,7 +53,7 @@ case $1 in
     "backup")
 #        nowtime= date +"%Y-%m-%d"
 
-        mysqldump -u root -p Utime > /home/database-backup/alg_database_backup.sql
+        mysqldump -u root -p Utime > /home/database-backup/utime_database_backup.sql
     ;;
     "clearlog")
         sudo rm /var/log/Utime.log
