@@ -23,7 +23,7 @@ class TailwindRequest(models.Model):
     )
 
     requestID = models.BigIntegerField(verbose_name='发起单编号', primary_key=True, blank=False, unique=True, default=1)
-
+ 
     initiator = models.ForeignKey(UserInfo, verbose_name='订单发起人', on_delete=models.CASCADE)
 
     taskContent = models.TextField(verbose_name='任务内容', default='', blank=False)

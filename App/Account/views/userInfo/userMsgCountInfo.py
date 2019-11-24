@@ -35,7 +35,7 @@ class MeView(APIView):
             Q(initiator=user) &
             Q(status='paid')
         ).count()
-        # 统计待完成订单数量
+        # 统计(已接单)待完成订单数量
         waiting_for_finish_number = TailwindRequest.objects.filter(
             Q(initiator=user) &
             Q(status='orderT')
@@ -46,10 +46,10 @@ class MeView(APIView):
             Q(status='waitR')
         ).count()
         tailwind_number = {}
-        tailwind_number['unpaid_number'] = unpaid_number
-        tailwind_number['waiting_number'] = waiting_number
-        tailwind_number['waiting_for_finish_number'] = waiting_for_finish_number
-        tailwind_number['unrated_number'] = unrated_number
+        tailwind_number['unpaid_number'] = str(unpaid_number)
+        tailwind_number['waiting_number'] = str(waiting_number)
+        tailwind_number['waiting_for_finish_number'] = str(waiting_for_finish_number)
+        tailwind_number['unrated_number'] = str(unrated_number)
 
         # 头像参数修改
         # if user.head_portrait:
