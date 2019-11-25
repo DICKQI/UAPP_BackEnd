@@ -21,8 +21,8 @@ class RequestInfoView(APIView):
         jsonParams = json.loads((request.body).decode('utf-8'))
         place = jsonParams.get('place')
         result = TailwindRequest.objects.filter(
-            Q(beginPlace=place) |
-            Q(endPlace=place)
+            Q(beginPlace__contains=place) |
+            Q(endPlace__contains=place)
         )
         searchResult = [model_to_dict(re, fields=self.INCLUDE_FIELDS) for re in result if re.status == 'paid']
         return JsonResponse({
