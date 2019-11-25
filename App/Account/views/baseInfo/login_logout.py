@@ -54,7 +54,7 @@ class AccountBaseView(APIView):
                 })
             return JsonResponse({
                 'status': False,
-                'err': '密码错误'
+                'errMsg': '密码错误'
             }, status=401)
 
         except Exception as ex:
