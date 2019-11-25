@@ -17,11 +17,11 @@ class UserTailwindRequestView(APIView):
     @check_login
     @checkStudent
     def get(self, request, uid=0):
-        '''
+        """
         获得用户发起的订单
         :param request:
         :return:
-        '''
+        """
         try:
             if uid == 0:
                 user = getUser(email=request.session.get('login'))
