@@ -60,7 +60,7 @@ class AccountBaseView(APIView):
         except Exception as ex:
             return JsonResponse({
                 'status': False,
-                'errMsg': str(ex)
+                'errMsg': '错误信息：' + str(ex)
             }, status=403)
 
     @check_login

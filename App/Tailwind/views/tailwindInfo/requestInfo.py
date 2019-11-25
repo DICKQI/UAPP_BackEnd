@@ -30,3 +30,12 @@ class RequestInfoView(APIView):
             'count': result.count(),
             'searchResult': searchResult
         })
+
+    @check_login
+    def get(self, request, tid):
+        """
+        获取请求单详情
+        :param request:
+        :param tid:
+        :return:
+        """
