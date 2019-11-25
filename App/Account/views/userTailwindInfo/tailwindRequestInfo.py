@@ -116,7 +116,7 @@ class UserTailwindRequestView(APIView):
         if not oldRequest:
             # 如果一个订单都没有
             newID = time + '001'
-            return newID
+            return int(newID)
         # 获取最新订单的时间
         oldOrderTime = str(oldRequest.requestID)[:len(str(oldRequest.requestID)) - 3]
         if oldOrderTime == time:

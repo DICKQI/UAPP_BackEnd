@@ -22,12 +22,10 @@ class TailwindRequestListView(APIView):
         '''
         try:
             page = request.GET.get('page')
-            requestObj = TailwindRequest.objects.all()
+            requestObj = TailwindRequest.objects.filter(status='paid')
             requestList = paginator(requestObj, page)
 
-            requestOrder = [model_to_dict(re, fields=self.INCLUDE_FIELDS) for re in requestList
-                            if re.status == 'paid'
-                            ]
+            requestOrder = [model_to_dict(re, fields=self.INCLUDE_FIELDS) for re in requestList]
 
             return JsonResponse({
                 'status': True,
