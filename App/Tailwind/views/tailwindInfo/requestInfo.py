@@ -27,6 +27,6 @@ class RequestInfoView(APIView):
         searchResult = [model_to_dict(re, fields=self.INCLUDE_FIELDS) for re in result if re.status == 'paid']
         return JsonResponse({
             'status': True,
-            'count': result.count,
+            'count': result.count(),
             'searchResult': searchResult
         })
