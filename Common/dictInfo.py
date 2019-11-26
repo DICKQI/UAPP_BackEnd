@@ -43,6 +43,10 @@ def model_to_dict(instance, fields=None, exclude=None, *args, **kwargs):
             sec = data_time[17:19]
             value = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec
         if f.verbose_name == '发起单附图':
-            value = 'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + value.name
+            # value = 'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + value.name
+            if value.name:
+                value = 'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + value.name
+            else:
+                value = False
         data[f.name] = value
     return data

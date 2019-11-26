@@ -14,7 +14,7 @@ import os
 import pymysql
 import sys
 
-print(sys.version)
+# print(sys.version)
 
 pymysql.install_as_MySQLdb()
 
@@ -227,6 +227,13 @@ STATICFILES_DIRS = [
 '''
 这里放入oss配置参数
 '''
+ACCESS_KEY_ID = 'LTAIpK0JtS9hsWkG'
+ACCESS_KEY_SECRET = 'cQpsrRs3Nhv6hTRpEMuUA2pjX6BlWs'
+END_POINT = 'oss-cn-shenzhen-internal.aliyuncs.com'
+# END_POINT = 'oss-cn-shenzhen.aliyuncs.com'
+BUCKET_NAME = 'freetime-oss'
+BUCKET_ACL_TYPE = 'public-read-write'
+DEFAULT_FILE_STORAGE = 'aliyun_oss2_storage.backends.AliyunMediaStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/').replace('\\', '/')

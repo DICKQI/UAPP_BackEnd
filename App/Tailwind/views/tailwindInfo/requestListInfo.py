@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 
 class TailwindRequestListView(APIView):
     INCLUDE_FIELDS = [
-        'initiator', 'taskContent', 'beginTime', 'endTime', 'money', 'requestID', 'beginPlace', 'endPlace', 'serviceType'
+        'initiator', 'taskContent', 'beginTime', 'endTime', 'money', 'requestID', 'beginPlace', 'endPlace', 'serviceType', 'img'
     ]
 
     # @checkStudent

@@ -10,6 +10,25 @@ import json
 
 
 class AccountBaseView(APIView):
+
+    # @check_login
+    def get(self, request):
+        '''
+        用于检查是否登录
+        :param request:
+        :return:
+        '''
+        if request.session.get('login'):
+            return JsonResponse({
+                'status': True,
+                'id': getUser(request.session.get('login')).id
+            })
+        else:
+            return JsonResponse({
+                'status': False,
+                'errMsg': '你还未登录'
+            }, status=401)
+
     def post(self, request):
         '''
         登录账户

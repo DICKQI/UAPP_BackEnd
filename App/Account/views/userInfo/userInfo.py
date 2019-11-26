@@ -45,6 +45,8 @@ class UserInfoView(APIView):
                 break
         if user.head_portrait:
             userInformation['head portrait'] = 'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + str(user.head_portrait)
+        else:
+            userInformation['head portrait'] = False
         return JsonResponse({
             'status': True,
             'information': userInformation

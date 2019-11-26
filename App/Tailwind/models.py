@@ -7,7 +7,7 @@ from django.utils.timezone import now
 # Create your models here.
 
 class TailwindRequest(models.Model):
-    '''有闲发起单数据库模型'''
+    """有闲发起单数据库模型"""
     STATUS_CHOICES = (
         ('unpaid', '未支付'),
         ('paid', '等待接单'),  # 已支付

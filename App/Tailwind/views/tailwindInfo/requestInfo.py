@@ -32,6 +32,7 @@ class RequestInfoView(APIView):
         })
 
     @check_login
+    # @checkStudent
     def get(self, request, tid):
         """
         获取请求单详情
@@ -39,3 +40,21 @@ class RequestInfoView(APIView):
         :param tid:
         :return:
         """
+        try:
+            tailwind_request = TailwindRequest.objects.filter(requestID=tid)
+            if not tailwind_request.exists():
+                return JsonResponse({
+                    'status': False,
+                    'errMsg': '请求单不存在'
+                }, status=404)
+            tailwind_request = tailwind_request[0]
+            result = model_to_dict(tailwind_request)
+            return JsonResponse({
+                'status': True,
+                'detail': result
+            })
+        except Exception as ex:
+            return JsonResponse({
+                'status': False,
+                'errMsg': '错误信息：' + str(ex)
+            })
