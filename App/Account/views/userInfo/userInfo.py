@@ -44,9 +44,9 @@ class UserInfoView(APIView):
                 userInformation['role'] = i[1]
                 break
         if user.head_portrait:
-            userInformation['head portrait'] = 'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + str(user.head_portrait)
+            userInformation['head_portrait'] = 'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + str(user.head_portrait)
         else:
-            userInformation['head portrait'] = False
+            userInformation['head_portrait'] = False
         return JsonResponse({
             'status': True,
             'information': userInformation
@@ -59,7 +59,21 @@ class UserInfoView(APIView):
         :param request:
         :return:
         '''
-        pass
+        try:
+            user = getUser(email=request.session.get('login'))
+            head_portrait = request.FILES.get('img')
+            user.head_portrait = head_portrait
+            user.save()
+            return JsonResponse({
+                'status': False,
+                'id': user.id
+            })
+        except Exception as ex:
+            return JsonResponse({
+                'status': False,
+                'errMsg': '错误信息：' + str(ex)
+            })
+
 
     @check_login
     def put(self, request):
@@ -68,4 +82,11 @@ class UserInfoView(APIView):
         :param request:
         :return:
         '''
-        pass
+        try:
+            pass
+        except Exception as ex:
+            return JsonResponse({
+                'status': False,
+                'errMsg': '错误信息：' + str(ex)
+            })
+

@@ -1,5 +1,5 @@
 from django.urls import path
-from .tailwindRequestInfo import UserTailwindRequestView
+from .userTailwindRequestInfo import UserTailwindRequestView
 
 
 app_name = 'user_tailwind'
