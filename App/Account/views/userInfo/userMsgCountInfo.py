@@ -59,7 +59,7 @@ class MeView(APIView):
             userAuthentication['email_active'] = False
         else:
             userAuthentication['email_active'] = True
-        if user.student_id != '0':
+        if user.student_id != 0:
             userAuthentication['es_check'] = True
         else:
             userAuthentication['es_check'] = False
