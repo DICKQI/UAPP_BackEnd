@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from App.Account.models import UserInfo, School, UserPassword
+from App.Account.models import UserInfo, School, UserPassword, UserConfig
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 import random
@@ -51,6 +51,9 @@ class RegisterView(APIView):
         # 对应学校账户+1
         school.user_number += 1
         school.save()
+
+        # 注册账户的时候同时创建一个用户个性化设置的对象
+        UserConfig.objects.create(relateUser=newUser)
 
         return JsonResponse({
             'status': True,

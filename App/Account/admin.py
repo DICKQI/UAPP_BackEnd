@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserInfo, School
+from .models import UserInfo, School, UserConfig
 
 @admin.register(UserInfo)
 class AdminUserInfo(admin.ModelAdmin):
@@ -15,3 +15,10 @@ class AdminSchool(admin.ModelAdmin):
     list_per_page = 50
     search_fields = ['name']
     list_display = ['name', 'abbreviation', 'user_number']
+
+
+@admin.register(UserConfig)
+class AdminUserConfig(admin.ModelAdmin):
+
+    list_per_page = 30
+    search_fields = ['nickname']

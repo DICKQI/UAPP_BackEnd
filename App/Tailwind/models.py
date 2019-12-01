@@ -49,7 +49,7 @@ class TailwindRequest(models.Model):
         verbose_name = '有闲发起单'
         verbose_name_plural = verbose_name + '列表'
         db_table = 'Tailwind_TailwindRequest'
-        ordering = ['-beginTime']
+        ordering = ['-beginTime', '-endTime']
 
     def __str__(self):
         return self.initiator.nickname

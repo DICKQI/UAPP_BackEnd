@@ -13,7 +13,6 @@ class UserInfoView(APIView):
         'from_school', 'credit_score', 'TimesOfPraise', 'TimesOfBadEvaluation'
     ]
 
-
     @check_login
     def get(self, request, uid=0):
         '''
@@ -30,7 +29,7 @@ class UserInfoView(APIView):
             ]
             self.INCLUDE_FIELDS += MYSELF_FIELDS
         else:
-            # 查看他人的信息
+            # 查看他人的信息(同时获取发起订单的列表)
             user = UserInfo.objects.filter(id=uid)
             if not user.exists():
                 return JsonResponse({
@@ -44,7 +43,8 @@ class UserInfoView(APIView):
                 userInformation['role'] = i[1]
                 break
         if user.head_portrait:
-            userInformation['head_portrait'] = 'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + str(user.head_portrait)
+            userInformation['head_portrait'] = 'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + str(
+                user.head_portrait)
         else:
             userInformation['head_portrait'] = False
         return JsonResponse({
@@ -74,7 +74,6 @@ class UserInfoView(APIView):
                 'errMsg': '错误信息：' + str(ex)
             })
 
-
     @check_login
     def put(self, request):
         '''
@@ -89,4 +88,3 @@ class UserInfoView(APIView):
                 'status': False,
                 'errMsg': '错误信息：' + str(ex)
             })
-

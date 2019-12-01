@@ -117,6 +117,17 @@ class UserConfig(models.Model):
     '''账户个性化设置'''
     relateUser = models.ForeignKey(UserInfo, verbose_name='关联主账户', on_delete=models.CASCADE)
 
-    dormitory = models.CharField(verbose_name='宿舍楼', default=None, null=True, blank=True, max_length=100)
+    dormitory = models.TextField(verbose_name='宿舍楼', default='', null=True, blank=True)
 
-    commonAcademicBuilding = models.TextField(verbose_name='常用教学楼', default='', null=True, blank=True)
+    commonAcademicBuilding = models.TextField(verbose_name='常用教学楼',
+                                              default='{"Mon":[],"Tue": [],"Wed": [],"Thu": [],"Fri": [],"Sat": [],'
+                                                      '"Sun": []}',
+                                              null=True, blank=True)
+
+    class Meta:
+        verbose_name = '账户个性化设置'
+        verbose_name_plural = verbose_name + '列表'
+        db_table = 'Account_UserConfig'
+
+    def __str__(self):
+        return self.relateUser.nickname

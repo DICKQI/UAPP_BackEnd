@@ -11,7 +11,7 @@ urlpatterns = [
     path('me/', MeView.as_view(), name='user_tailwind_count'),
     path('dashboard/', UserInfoView.as_view(), name='myself_dashboard'),
     path('dashboard/<int:uid>/', UserInfoView.as_view(), name='other_dashboard'), # 查看别人的资料
-    # tailwindInfo
+    # tailwindRequestInfo
     path('tailwind/', include('App.Account.views.userTailwindInfo.urls', namespace='user_tailwind')),
 
 ]

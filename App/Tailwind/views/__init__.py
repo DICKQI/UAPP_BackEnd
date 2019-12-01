@@ -1,5 +1,5 @@
-from .tailwindInfo.requestListInfo import TailwindRequestListView
-from .tailwindInfo.requestInfo import RequestInfoView
+from .tailwindRequestInfo.requestListInfo import TailwindRequestListView
+from .tailwindRequestInfo.requestInfo import RequestInfoView
 
 __all__ = [
     'TailwindRequestListView', 'RequestInfoView'

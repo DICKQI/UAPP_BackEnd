@@ -22,6 +22,10 @@ class MeView(APIView):
 
         user = getUser(request.session.get('login'))
 
+
+        '''
+        未支付(unpaid) --》 支付后等待接单(paid) --》 接单后等待完成(orderT) --》 完成后变成待评价(waitR) --》评价后就完成了(accomplish)
+        '''
         # 统计订单情况
         # 统计未支付的订单数量
         unpaid_number = TailwindRequest.objects.filter(
