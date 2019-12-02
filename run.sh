@@ -2,14 +2,10 @@
 case $1 in
     "up")
 
-        # shellcheck disable=SC2006
+
         if [ ! -d "/var/log/utime-log/`date +%Y%m%d`" ];then
-            # shellcheck disable=SC2046
             mkdir /var/log/utime-log/`date +%Y%m%d`
         fi
-
-        # shellcheck disable=SC2046
-        # shellcheck disable=SC2006
         uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/utime-log/`date +%Y%m%d`/utime.log --module UTime.wsgi &
 
         echo "UTime已启动"
@@ -32,14 +28,12 @@ case $1 in
 
         kill -9 $pid
 
-        # shellcheck disable=SC2006
+
         if [ ! -d "/var/log/utime-log/`date +%Y%m%d`" ];then
-            # shellcheck disable=SC2046
+
             mkdir /var/log/utime-log/`date +%Y%m%d`
         fi
 
-        # shellcheck disable=SC2046
-        # shellcheck disable=SC2006
         uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/utime-log/`date +%Y%m%d`/utime.log --module UTime.wsgi &
 
         echo "UTime重启成功"
@@ -55,7 +49,7 @@ case $1 in
         echo "初始化项目数据库成功"
     ;;
     "makemigrations")
-        # shellcheck disable=SC2068
+
         python3 manage.py makemigrations ${@:2}
 #        echo ${@:2}
     ;;
@@ -66,8 +60,7 @@ case $1 in
         python3 manage.py createsuperuser
     ;;
     "log")
-        # shellcheck disable=SC2046
-        # shellcheck disable=SC2006
+
         tail -f /var/log/utime-log/`date +%Y%m%d`/utime.log
     ;;
     "backup")
