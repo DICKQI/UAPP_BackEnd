@@ -1,7 +1,12 @@
 #!/bin/bash
 case $1 in
     "up")
-        uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/Utime.log --module UTime.wsgi &
+
+        if [ ! -d "/var/log/utime-log/`date +%Y%m%d`" ];then
+            mkdir /var/log/utime-log/`date +%Y%m%d`
+        fi
+
+        uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/utime-log/`date +%Y%m%d`/utime.log --module UTime.wsgi &
 
         echo "UTime已启动"
     ;;
