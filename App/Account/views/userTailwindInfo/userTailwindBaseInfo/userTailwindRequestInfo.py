@@ -1,7 +1,7 @@
 from App.Tailwind.models import TailwindRequest
-from App.Account.models import UserInfo
 from django.http import JsonResponse
 from django.utils.timezone import now
+from django.db.models import Q
 from Common.paginator import paginator
 from Common.dictInfo import model_to_dict
 from Common.userAuthCommon import check_login, getUser, checkStudent
@@ -19,23 +19,24 @@ def generateRequestID():
     oldRequest = TailwindRequest.objects.first()
     if not oldRequest:  # 这个if应该只用得上一次
         # 如果一个订单都没有
-        newID = time + '001'
+        newID = time + '0001'
         return int(newID)
     # 获取最新订单的时间
-    oldOrderTime = str(oldRequest.requestID)[:len(str(oldRequest.requestID)) - 3]
+    oldOrderTime = str(oldRequest.requestID)[:len(str(oldRequest.requestID)) - 4]
     if oldOrderTime == time:
         # 判断是否是同一分钟创建的
-        newID = str(int(str(oldRequest.requestID)[-3:]) + 1)
+        newID = str(int(str(oldRequest.requestID)[-4:]) + 1)
     else:
         # 非同一分钟创建
-        newID = '001'
-    for i in range(3 - len(newID)):
+        newID = '0001'
+    for i in range(4 - len(newID)):
         newID = '0' + newID
     newID = time + newID
     return int(newID)
 
 
 class UserTailwindRequestView(APIView):
+    """用户对发起单的一系列操作"""
     COMMON_FIELDS = [
         'requestID', 'taskContent', 'beginTime', 'endTime',
         'money', 'serviceType', 'status'
@@ -52,12 +53,40 @@ class UserTailwindRequestView(APIView):
         try:
             user = getUser(email=request.session.get('login'))
             page = request.GET.get('page')
-            tailwindObj = TailwindRequest.objects.filter(initiator=user)
+            ago = request.GET.get('ago')
+            datetimeNow = datetime.datetime.now()
+            month = datetimeNow.month
+            year = datetimeNow.year
+            if month > 3:
+                month -= 3
+            else:
+                year -= 1
+                month = 12 - 3 + month
+            year = str(year)
+            month = str(month)
+            three_month_ago = year + '-' + month + '-' + str(
+                datetimeNow.day) + ' ' + str(datetimeNow.hour) + ':' + str(datetimeNow.minute) + ":" + str(
+                datetimeNow.second)
+            three_month_ago = datetime.datetime.strptime(three_month_ago, '%Y-%m-%d %H:%M:%S')
+            if ago:
+                # 获取三个月前的订单
+                tailwindObj = TailwindRequest.objects.filter(
+                    Q(initiator=user)
+                    & Q(beginTime__lte=three_month_ago)
+                )
+            else:
+                # 获取三个月内的
+                tailwindObj = TailwindRequest.objects.filter(
+                    Q(initiator=user)
+                    & Q(beginTime__gte=three_month_ago)
+                )
             tailwindList = paginator(tailwindObj, page)
             tailwind = [model_to_dict(t, fields=self.COMMON_FIELDS) for t in tailwindList]
             return JsonResponse({
                 'status': True,
-                'tailwind': tailwind
+                'tailwind': tailwind,
+                'has_next': tailwindList.has_next(),
+                'has_previous': tailwindList.has_previous()
             })
         except Exception as ex:
             return JsonResponse({

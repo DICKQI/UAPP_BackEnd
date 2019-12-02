@@ -56,10 +56,11 @@ class TailwindRequest(models.Model):
 
 
 class TailwindTakeOrder(models.Model):
-    '''有闲订单数据库模型'''
+    """有闲接受单数据库模型"""
 
     STATUS_CHOICES = (
         ('unaccomplished', '未完成'),
+        ('cancel', '取消'),
         ('accomplished', '已完成')
     )
 
@@ -67,14 +68,14 @@ class TailwindTakeOrder(models.Model):
 
     mandatory = models.ForeignKey(UserInfo, verbose_name='订单接单人', on_delete=models.CASCADE)
 
-    tailwind = models.ForeignKey(TailwindRequest, verbose_name='关联发起订单', on_delete=models.CASCADE)
+    tailwindRequest = models.ForeignKey(TailwindRequest, verbose_name='关联发起订单', on_delete=models.CASCADE)
 
     status = models.CharField(verbose_name='订单状态', choices=STATUS_CHOICES, max_length=100, blank=False,
                               default='unaccomplished')
 
     create_time = models.DateTimeField(verbose_name='创建时间', default=now, blank=False)
 
-    end_time = models.DateTimeField(verbose_name='结束时间', blank=True)
+    end_time = models.DateTimeField(verbose_name='结束时间', blank=True, null=True)
 
     class Meta:
         verbose_name = '有闲接受订单'
@@ -87,7 +88,7 @@ class TailwindTakeOrder(models.Model):
 
 
 class DealRate(models.Model):
-    '''有闲交易互评数据库模型'''
+    """有闲交易互评数据库模型"""
 
     RATE_STATUS = (
         ('un_reviewed', '未评价'),

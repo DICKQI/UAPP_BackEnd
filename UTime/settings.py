@@ -138,6 +138,7 @@ CORS_ALLOW_HEADERS = (
 MIDDLEWARE = [
     # config middleware
     'Middleware.visitLogMiddleware.VisitLogMiddleware',
+    'Middleware.memoryListenMiddleware.MemoryListenMiddleware',
 
     # django middleware
     'django.middleware.security.SecurityMiddleware',

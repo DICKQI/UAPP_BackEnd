@@ -7,7 +7,6 @@ from Common.dictInfo import model_to_dict
 
 
 class MeView(APIView):
-
     USER_INCLUDE_FIELDS = [
         'nickname', 'id',
     ]
@@ -19,11 +18,9 @@ class MeView(APIView):
         :param request:
         :return:
         '''
-
         user = getUser(request.session.get('login'))
-
-
         '''
+        请求单
         未支付(unpaid) --》 支付后等待接单(paid) --》 接单后等待完成(orderT) --》 完成后变成待评价(waitR) --》评价后就完成了(accomplish)
         '''
         # 统计订单情况
@@ -47,11 +44,15 @@ class MeView(APIView):
             Q(initiator=user) &
             Q(status='waitR')
         ).count()
-        tailwind_number = {}
-        tailwind_number['unpaid_number'] = str(unpaid_number)
-        tailwind_number['waiting_number'] = str(waiting_number)
-        tailwind_number['waiting_for_finish_number'] = str(waiting_for_finish_number)
-        tailwind_number['unrated_number'] = str(unrated_number)
+        # 统计自己正在进行中的接收单
+        inProcess_number = TailwindTakeOrder.objects.filter(
+            Q(mandatory=user) &
+            Q(status='unaccomplished')
+        ).count()
+
+        tailwind_number = {'unpaid_number': str(unpaid_number), 'waiting_number': str(waiting_number),
+                           'waiting_for_finish_number': str(waiting_for_finish_number),
+                           'unrated_number': str(unrated_number), 'inProcess_number': str(inProcess_number)}
 
         userAuthentication = {}
 

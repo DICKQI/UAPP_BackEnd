@@ -6,6 +6,17 @@ import random
 import json
 
 
+def randomID():
+    '''
+    生成随机不重复的id
+    :return:
+    '''
+    newid = random.randint(10000000, 999999999)
+    while UserInfo.objects.filter(id=newid).exists():
+        newid = random.randint(10000000, 999999999)
+    return newid
+
+
 class RegisterView(APIView):
     def post(self, request):
         '''注册账户'''
@@ -35,7 +46,7 @@ class RegisterView(APIView):
         # 密码转码
         hash_password = make_password(jsonParams.get('password'))
         # 随机ID
-        newid = self.randomID()
+        newid = randomID()
         # 创建密码
         newPassword = UserPassword.objects.create(
             password=hash_password
@@ -61,13 +72,3 @@ class RegisterView(APIView):
             'email': newUser.email,
             'nickname': newUser.nickname,
         })
-
-    def randomID(self):
-        '''
-        生成随机不重复的id
-        :return:
-        '''
-        newid = random.randint(10000000, 999999999)
-        while UserInfo.objects.filter(id=newid).exists():
-            newid = random.randint(10000000, 999999999)
-        return newid

@@ -12,7 +12,7 @@ class UserTailwindRequestOrderTListView(APIView):
     @check_login
     def get(self, request):
         '''
-
+        获得当前用户已被接单等待完成的订单
         :param request:
         :return:
         '''

@@ -1,5 +1,5 @@
 from django.urls import path
-from .userTailwindBaseInfo import UserTailwindRequestView
+from .userTailwindBaseInfo import *
 from .userTailwindRequestDetailList import *
 
 app_name = 'user_tailwind'
@@ -16,4 +16,5 @@ urlpatterns = [
     path('request/detail/wait_rate/', UserTailwindRequestWaitRateListView.as_view(),
          name='user_tailwind_request_wait_rate_list'),
     # 用户对接受单的操作
+    path('take/<int:rid>/', UserTailwindTakeOrderView.as_view(), name='user_tailwind_takeOrder'),  # 接单
 ]
