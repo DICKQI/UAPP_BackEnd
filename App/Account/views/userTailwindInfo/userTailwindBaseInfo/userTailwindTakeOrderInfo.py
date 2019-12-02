@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.utils.timezone import now
 from Common.paginator import paginator
 from Common.dictInfo import model_to_dict
+from Common.dateInfo import get_three_month_ago
 from Common.userAuthCommon import check_login, getUser, checkStudent
 from rest_framework.views import APIView
 import json, datetime, oss2
@@ -22,7 +23,28 @@ class UserTailwindTakeOrderView(APIView):
         :return:
         """
         try:
-            pass
+            user = getUser(request.session.get('login'))
+            ago = request.GET.get('ago')
+            page = request.GET.get('page')
+            three_month_ago = get_three_month_ago()
+            if ago:
+                tailwindTake = TailwindTakeOrder.objects.filter(
+                    Q(mandatory=user)
+                    & Q(create_time__lte=three_month_ago)  # 小于等于这个时间
+                )
+            else:
+                tailwindTake = TailwindTakeOrder.objects.filter(
+                    Q(mandatory=user)
+                    & Q(create_time__gte=three_month_ago)  # 大于等于这个时间
+                )
+            takeList = paginator(tailwindTake, page)
+            tailwindTakeOrder = [model_to_dict(tl, exclude='end_time') for tl in takeList]
+            return JsonResponse({
+                'status': True,
+                'takeOrder': tailwindTakeOrder,
+                'has_next': takeList.has_next(),
+                'has_previous': takeList.has_previous()
+            })
         except Exception as ex:
             return JsonResponse({
                 'status': False,
@@ -41,18 +63,19 @@ class UserTailwindTakeOrderView(APIView):
         try:
             user = getUser(request.session.get('login'))
             tailwindRequest = getRequest(rid)
-            if not request:
+            if not tailwindRequest:
                 return JsonResponse({
                     'status': False,
-                    'errMsg': '请求单不存在'
-                })
+                    'errMsg': '请求单不存在或已经被接单啦'
+                }, status=401)
             newTakeOrder = TailwindTakeOrder.objects.create(
                 takeID=generateNewTakeID(tailwindRequest.requestID),
                 mandatory=user,
                 tailwindRequest=tailwindRequest
             )
             # 修改request单的状态
-            # tailwindRequest.status = 'orderT'
+            tailwindRequest.status = 'orderT'
+            tailwindRequest.save()
             return JsonResponse({
                 'status': True,
                 'newTakeID': newTakeOrder.takeID,
@@ -77,13 +100,7 @@ def getRequest(rid):
 
 def generateNewTakeID(requestID):
     """生成接受单id"""
-    # oldTake = TailwindTakeOrder.objects.filter(takeID__gte=requestID)
-    # print(oldTake[len(oldTake) - 1].takeID)
-    # if not oldTake.exists():
-    #     newID = int(str(requestID) + '001')
-    # else:
-    #     newID = str(int(str(oldTake[0].takeID)[16:18]) + 1)
-    #     for i in range(3 - len(newID)):
-    #         newID = '0' + newID
-    #     newID = int(str(requestID) + newID)
-    # return newID
+    id = int(str(requestID) + '001')
+    while TailwindTakeOrder.objects.filter(takeID=id).exists():
+        id += 1
+    return id

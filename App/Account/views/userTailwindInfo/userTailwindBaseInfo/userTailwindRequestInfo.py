@@ -5,6 +5,7 @@ from django.db.models import Q
 from Common.paginator import paginator
 from Common.dictInfo import model_to_dict
 from Common.userAuthCommon import check_login, getUser, checkStudent
+from Common.dateInfo import get_three_month_ago
 from rest_framework.views import APIView
 import json, datetime, oss2
 
@@ -54,20 +55,7 @@ class UserTailwindRequestView(APIView):
             user = getUser(email=request.session.get('login'))
             page = request.GET.get('page')
             ago = request.GET.get('ago')
-            datetimeNow = datetime.datetime.now()
-            month = datetimeNow.month
-            year = datetimeNow.year
-            if month > 3:
-                month -= 3
-            else:
-                year -= 1
-                month = 12 - 3 + month
-            year = str(year)
-            month = str(month)
-            three_month_ago = year + '-' + month + '-' + str(
-                datetimeNow.day) + ' ' + str(datetimeNow.hour) + ':' + str(datetimeNow.minute) + ":" + str(
-                datetimeNow.second)
-            three_month_ago = datetime.datetime.strptime(three_month_ago, '%Y-%m-%d %H:%M:%S')
+            three_month_ago = get_three_month_ago()
             if ago:
                 # 获取三个月前的订单
                 tailwindObj = TailwindRequest.objects.filter(

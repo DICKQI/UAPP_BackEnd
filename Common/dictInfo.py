@@ -35,6 +35,9 @@ def model_to_dict(instance, fields=None, exclude=None, *args, **kwargs):
                 }
             if f.verbose_name == '学校':
                 value = School.objects.get(id=value).name
+            # if f.verbose_name == '关联发起订单':
+            #     from App.Tailwind.models import TailwindRequest
+            #     value = TailwindRequest.objects.get(requestID=value)
         if isinstance(f, DateTimeField):
             data_time = str(value)
             year = data_time[0:4]

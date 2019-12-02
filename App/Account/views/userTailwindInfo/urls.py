@@ -16,5 +16,6 @@ urlpatterns = [
     path('request/detail/wait_rate/', UserTailwindRequestWaitRateListView.as_view(),
          name='user_tailwind_request_wait_rate_list'),
     # 用户对接受单的操作
+    path('take/', UserTailwindTakeOrderView.as_view(), name='user_tailwind_takeOrder_info'),  # 查看
     path('take/<int:rid>/', UserTailwindTakeOrderView.as_view(), name='user_tailwind_takeOrder'),  # 接单
 ]
