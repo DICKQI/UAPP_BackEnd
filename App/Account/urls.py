@@ -10,7 +10,8 @@ urlpatterns = [
     # userInfo
     path('me/', MeView.as_view(), name='user_tailwind_count'),
     path('dashboard/', UserInfoView.as_view(), name='myself_dashboard'),
-    path('dashboard/<int:uid>/', UserInfoView.as_view(), name='other_dashboard'), # 查看别人的资料
+    path('dashboard/<int:uid>/', UserInfoView.as_view(), name='other_dashboard'),  # 查看别人的资料
+    path('stu_check/', StudentUserCheckView.as_view(), name='student_check'),  # 验证学生信息
     # tailwindRequestInfo
     path('tailwind/', include('App.Account.views.userTailwindInfo.urls', namespace='user_tailwind')),
 

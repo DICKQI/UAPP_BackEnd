@@ -23,7 +23,7 @@ class TailwindRequest(models.Model):
     )
 
     requestID = models.BigIntegerField(verbose_name='发起单编号', primary_key=True, blank=False, unique=True, default=1)
- 
+
     initiator = models.ForeignKey(UserInfo, verbose_name='订单发起人', on_delete=models.CASCADE)
 
     taskContent = models.TextField(verbose_name='任务内容', default='', blank=False)
@@ -105,7 +105,8 @@ class DealRate(models.Model):
 
     SecondPartyRate = models.CharField(verbose_name='乙方评价', default='', blank=False, max_length=230)
 
-    status = models.CharField(verbose_name='评价表状态', choices=RATE_STATUS, blank=False, max_length=100, default='un_reviewed')
+    status = models.CharField(verbose_name='评价表状态', choices=RATE_STATUS, blank=False, max_length=100,
+                              default='un_reviewed')
 
     class Meta:
         verbose_name = '有闲交易互评'
@@ -115,3 +116,17 @@ class DealRate(models.Model):
     def __str__(self):
         return self.relateTailwindTakeOrder.takeID
 
+
+class TakeOrderUserRealtimeLocation(models.Model):
+    """接单人实时位置"""
+
+    relateTakeOrder = models.ForeignKey(TailwindTakeOrder, verbose_name='关联接受单', on_delete=models.CASCADE)
+
+    latitude = models.FloatField(verbose_name='纬度', default=0.0)
+
+    longitude = models.FloatField(verbose_name='经度', default=0.0)
+
+    speed = models.FloatField(verbose_name='速度', default=0.0)
+
+    class Meta:
+        db_table = 'Tailwind_RealtimeLocation'
