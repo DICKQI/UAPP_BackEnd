@@ -1,14 +1,16 @@
 from App.Tailwind.models import TailwindRequest, TailwindTakeOrder
-from App.Account.models import UserInfo
+# from App.Account.models import UserInfo
 from django.http import JsonResponse
 from django.db.models import Q
-from django.utils.timezone import now
+# from django.utils.timezone import now
 from Common.paginator import paginator
 from Common.dictInfo import model_to_dict
 from Common.dateInfo import get_three_month_ago
 from Common.userAuthCommon import check_login, getUser, checkStudent
 from rest_framework.views import APIView
-import json, datetime, oss2
+
+
+# import json, datetime, oss2
 
 
 class UserTailwindTakeOrderView(APIView):
@@ -57,7 +59,7 @@ class UserTailwindTakeOrderView(APIView):
         """
         用户接单
         :param request:
-        :param rid:
+        :param rid: request id
         :return:
         """
         try:
@@ -68,8 +70,17 @@ class UserTailwindTakeOrderView(APIView):
                     'status': False,
                     'errMsg': '请求单不存在或已经被接单啦'
                 }, status=401)
+            newID = generateNewTakeID(tailwindRequest.requestID)
+            if int(str(newID)[-2:]) >= 11:
+                '''怀疑恶意接单'''
+                tailwindRequest.status = 'cancel'
+                tailwindRequest.save()
+                return JsonResponse({
+                    'status': False,
+                    'errMsg': "订单已被取消"
+                }, status=401)
             newTakeOrder = TailwindTakeOrder.objects.create(
-                takeID=generateNewTakeID(tailwindRequest.requestID),
+                takeID=newID,
                 mandatory=user,
                 tailwindRequest=tailwindRequest
             )
@@ -78,8 +89,41 @@ class UserTailwindTakeOrderView(APIView):
             tailwindRequest.save()
             return JsonResponse({
                 'status': True,
-                'newTakeID': newTakeOrder.takeID,
-                # 'endTime': tailwindRequest.endTime
+                'newTakeID': newTakeOrder.takeID
+            })
+        except Exception as ex:
+            return JsonResponse({
+                'status': False,
+                'errMsg': '错误信息：' + str(ex)
+            }, status=403)
+
+    @check_login
+    def delete(self, request, rid):
+        """
+        用户撤销接受单
+        :param request:
+        :param rid: take order id
+        :return:
+        """
+        try:
+            takeOrder = TailwindTakeOrder.objects.filter(
+                Q(takeID=rid) &
+                Q(status='unaccomplished')
+            )
+            if not takeOrder.exists():
+                return JsonResponse({
+                    'status': False,
+                    'errMsg': '未找到该接受单'
+                }, status=404)
+            takeOrder = takeOrder[0]
+            takeOrder.status = 'cancel'  # 修改接受单状态
+            takeOrder.tailwindRequest.status = 'paid'  # 修改请求单状态
+            takeOrder.save()
+            takeOrder.tailwindRequest.save()
+            return JsonResponse({
+                'status': True,
+                'tid': rid,
+                'rid': takeOrder.tailwindRequest.requestID
             })
         except Exception as ex:
             return JsonResponse({
@@ -100,7 +144,7 @@ def getRequest(rid):
 
 def generateNewTakeID(requestID):
     """生成接受单id"""
-    id = int(str(requestID) + '001')
-    while TailwindTakeOrder.objects.filter(takeID=id).exists():
-        id += 1
-    return id
+    newID = int(str(requestID) + '01')
+    while TailwindTakeOrder.objects.filter(takeID=newID).exists():
+        newID += 1
+    return newID

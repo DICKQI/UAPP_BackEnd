@@ -11,10 +11,10 @@ def randomID():
     生成随机不重复的id
     :return:
     '''
-    newid = random.randint(10000000, 999999999)
-    while UserInfo.objects.filter(id=newid).exists():
-        newid = random.randint(10000000, 999999999)
-    return newid
+    newID = random.randint(10000000, 999999999)
+    while UserInfo.objects.filter(id=newID).exists():
+        newID = random.randint(10000000, 999999999)
+    return newID
 
 
 class RegisterView(APIView):

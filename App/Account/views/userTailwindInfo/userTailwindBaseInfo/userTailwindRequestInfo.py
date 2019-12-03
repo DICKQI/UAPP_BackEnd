@@ -55,18 +55,28 @@ class UserTailwindRequestView(APIView):
             user = getUser(email=request.session.get('login'))
             page = request.GET.get('page')
             ago = request.GET.get('ago')
+            types = request.GET.get('type')
             three_month_ago = get_three_month_ago()
+            type_list = ['unpaid', 'paid', 'orderT', 'waitR', 'accomplish', 'cancel']
+            if not types:  # 没有对应的url参数，查询全部类型的
+                types = type_list
+            elif types not in type_list:  # 参数不合法
+                types = ['unpaid']
+            else:  # 参数合法，查询对应类型
+                types = [types]
             if ago:
                 # 获取三个月前的订单
                 tailwindObj = TailwindRequest.objects.filter(
                     Q(initiator=user)
                     & Q(beginTime__lte=three_month_ago)
+                    & Q(status__in=types)
                 )
             else:
                 # 获取三个月内的
                 tailwindObj = TailwindRequest.objects.filter(
                     Q(initiator=user)
                     & Q(beginTime__gte=three_month_ago)
+                    & Q(status__in=types)
                 )
             tailwindList = paginator(tailwindObj, page)
             tailwind = [model_to_dict(t, fields=self.COMMON_FIELDS) for t in tailwindList]

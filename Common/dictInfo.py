@@ -31,22 +31,20 @@ def model_to_dict(instance, fields=None, exclude=None, *args, **kwargs):
                 value = {
                     'id': value,
                     'user': user.nickname,
-                    'head_portrait': ('https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + user.head_portrait.name) if user.head_portrait else False
+                    'head_portrait': (
+                                'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + user.head_portrait.name) if user.head_portrait else False
                 }
             if f.verbose_name == '学校':
                 value = School.objects.get(id=value).name
-            # if f.verbose_name == '关联发起订单':
-            #     from App.Tailwind.models import TailwindRequest
-            #     value = TailwindRequest.objects.get(requestID=value)
+            if f.verbose_name == '关联发起订单':
+                from App.Tailwind.models import TailwindRequest
+                tr = TailwindRequest.objects.get(requestID=value)
+                value = {
+                    'id': tr.requestID,
+                    'desire_endTime': formatDatetime(tr.endTime)
+                }
         if isinstance(f, DateTimeField):
-            data_time = str(value)
-            year = data_time[0:4]
-            month = data_time[5:7]
-            day = data_time[8:10]
-            hour = data_time[11:13]
-            min = data_time[14:16]
-            sec = data_time[17:19]
-            value = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec
+            value = formatDatetime(value)
         if f.verbose_name == '发起单附图':
             # value = 'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + value.name
             if value.name:
@@ -55,3 +53,15 @@ def model_to_dict(instance, fields=None, exclude=None, *args, **kwargs):
                 value = False
         data[f.name] = value
     return data
+
+
+def formatDatetime(value):
+    data_time = str(value)
+    year = data_time[0:4]
+    month = data_time[5:7]
+    day = data_time[8:10]
+    hour = data_time[11:13]
+    min = data_time[14:16]
+    sec = data_time[17:19]
+    value = year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec
+    return value
