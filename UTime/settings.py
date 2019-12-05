@@ -14,7 +14,7 @@ import os
 import pymysql
 import sys
 
-# print(sys.version)
+print(sys.version)
 
 pymysql.install_as_MySQLdb()
 
