@@ -18,7 +18,7 @@ class AccountBaseView(APIView):
         :param request:
         :return:
         '''
-        if request.session.get('login'):
+        if request.session.get('login', None):
             return JsonResponse({
                 'status': True,
                 'id': getUser(request.session.get('login')).id

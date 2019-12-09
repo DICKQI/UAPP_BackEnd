@@ -14,8 +14,6 @@ import os
 import pymysql
 import sys
 
-print(sys.version)
-
 pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -44,6 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 注册django外的第三方库
+    'rest_framework',
+    'corsheaders',
+    'django_summernote',
+    'channels',
+
     # 注册app模块
 
     'App.Account',
@@ -51,13 +55,18 @@ INSTALLED_APPS = [
     'App.Tailwind',
     'App.ChatRoom',
     'App.FandQ',
-
-    # 注册django外的第三方库
-    'rest_framework',
-    'corsheaders',
-    'django_summernote',
-
 ]
+# channels setting
+ASGI_APPLICATION = 'UTime.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
 
 # 富文本编辑器设置
 SUMMERNOTE_CONFIG = {

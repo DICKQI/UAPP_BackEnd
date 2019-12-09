@@ -5,18 +5,14 @@ from django.db.models import Q
 from Common.paginator import paginator
 from Common.dictInfo import model_to_dict
 from Common.userAuthCommon import check_login, getUser, checkStudent
-from Common.dateInfo import get_three_month_ago
+from Common.dateInfo import get_three_month_ago, generateFormatTime
 from rest_framework.views import APIView
-import json, datetime, oss2
+import json, datetime
 
 
 def generateRequestID():
     # 根据时间生成请求单id
-    dt = datetime.datetime.now()
-    time = str(dt.year) + (str(dt.month) if dt.month > 9 else '0' + str(dt.month)) + (
-        str(dt.day) if dt.day > 9 else '0' + str(dt.day)) + (
-               str(dt.hour) if dt.hour > 9 else '0' + str(dt.hour)) + (
-               str(dt.minute) if dt.minute > 9 else '0' + str(dt.minute))
+    time = generateFormatTime()
     oldRequest = TailwindRequest.objects.first()
     if not oldRequest:  # 这个if应该只用得上一次
         # 如果一个订单都没有
@@ -95,11 +91,11 @@ class UserTailwindRequestView(APIView):
     @check_login
     # @checkStudent
     def post(self, request):
-        '''
+        """
         用户发起订单
         :param request:
         :return:
-        '''
+        """
         try:
             user = getUser(email=request.session.get('login'))
             jsonParam = json.loads((request.body).decode('utf-8'))

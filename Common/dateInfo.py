@@ -7,17 +7,15 @@ def get_three_month_ago():
     :return: type datetime.datetime
     """
     datetimeNow = datetime.datetime.now()
-    month = datetimeNow.month
-    year = datetimeNow.year
-    if month > 3:
-        month -= 3
-    else:
-        year -= 1
-        month = 12 - 3 + month
-    year = str(year)
-    month = str(month)
-    three_month_ago = year + '-' + month + '-' + str(
-        datetimeNow.day) + ' ' + str(datetimeNow.hour) + ':' + str(datetimeNow.minute) + ":" + str(
-        datetimeNow.second)
-    three_month_ago = datetime.datetime.strptime(three_month_ago, '%Y-%m-%d %H:%M:%S %Z')
+    three_month_ago_delta = datetime.timedelta(days=90)
+    three_month_ago = datetimeNow - three_month_ago_delta
     return three_month_ago
+
+
+def generateFormatTime():
+    dt = datetime.datetime.now()
+    time = str(dt.year) + (str(dt.month) if dt.month > 9 else '0' + str(dt.month)) + (
+        str(dt.day) if dt.day > 9 else '0' + str(dt.day)) + (
+               str(dt.hour) if dt.hour > 9 else '0' + str(dt.hour)) + (
+               str(dt.minute) if dt.minute > 9 else '0' + str(dt.minute))
+    return time

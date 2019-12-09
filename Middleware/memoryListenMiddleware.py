@@ -1,7 +1,7 @@
+import os
+import psutil
+
 from django.utils.deprecation import MiddlewareMixin
-from django.http import JsonResponse
-from django.utils.timezone import now
-import os, psutil
 
 
 def show_memory_info(hint):

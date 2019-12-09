@@ -1,8 +1,6 @@
 #!/bin/bash
 case $1 in
     "up")
-
-
         if [ ! -d "/var/log/utime-log/`date +%Y%m%d`" ];then
             mkdir /var/log/utime-log/`date +%Y%m%d`
         fi

@@ -26,13 +26,13 @@ def model_to_dict(instance, fields=None, exclude=None, *args, **kwargs):
             continue
 
         if isinstance(f, ForeignKey):
-            if f.verbose_name == '订单接单人' or f.verbose_name == '订单发起人':
+            if f.verbose_name == '订单接单人' or f.verbose_name == '订单发起人' or f.verbose_name == '发言人':
                 user = UserInfo.objects.get(id=value)
                 value = {
                     'id': value,
                     'user': user.nickname,
                     'head_portrait': (
-                                'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + user.head_portrait.name) if user.head_portrait else False
+                            'https://freetime-oss.oss-cn-shenzhen.aliyuncs.com/media/' + user.head_portrait.name) if user.head_portrait else False
                 }
             if f.verbose_name == '学校':
                 value = School.objects.get(id=value).name

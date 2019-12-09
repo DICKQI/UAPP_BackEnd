@@ -24,6 +24,7 @@ urlpatterns = [
 
     path('users/', include('App.Account.urls', namespace='Account')),
     path('tailwind/', include('App.Tailwind.urls', namespace='Tailwind')),
+    path('chat/', include('App.ChatRoom.urls', namespace='ChatRoom'))
 ]
 
 if settings.DEBUG:

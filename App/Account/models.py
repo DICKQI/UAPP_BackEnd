@@ -31,7 +31,7 @@ class UserPassword(models.Model):
 
 
 class UserInfo(models.Model):
-    '''主账户数据库模型'''
+    """主账户数据库模型"""
     roles = {
         ('515400', '总管理员'),
         ('99', 'VIP用户'),
