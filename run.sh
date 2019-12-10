@@ -1,10 +1,14 @@
 #!/bin/bash
 case $1 in
     "up")
+        # 创建运行日志文件夹
         if [ ! -d "/var/log/utime-log/`date +%Y%m%d`" ];then
             mkdir /var/log/utime-log/`date +%Y%m%d`
         fi
+        # 启动UTiime服务命令
         uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/utime-log/`date +%Y%m%d`/utime.log --module UTime.wsgi &
+        # 加入启动日志
+        echo " `date +%Y%m%d%H%M%S` UTime已启动 " >> /var/log/utime-log/start-up-log/start-up.log
 
         echo "UTime已启动"
     ;;
@@ -34,6 +38,8 @@ case $1 in
 
         uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/utime-log/`date +%Y%m%d`/utime.log --module UTime.wsgi &
 
+        echo " `date +%Y%m%d%H%M%S` UTime重启成功 " >> /var/log/utime-log/start-up-log/start-up.log
+        
         echo "UTime重启成功"
 
         rm tmp
