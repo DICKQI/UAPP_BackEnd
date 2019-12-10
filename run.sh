@@ -6,7 +6,7 @@ case $1 in
             mkdir /var/log/utime-log/`date +%Y%m%d`
         fi
         # 启动UTiime服务命令
-        uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/utime-log/`date +%Y%m%d`/utime.log --module UTime.wsgi &
+        uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/utime-log/`date +%Y%m%d`/utime.log --module UTime.wsgi --http-websockets &
         # 加入启动日志
         echo " `date +%Y%m%d%H%M%S` UTime已启动 " >> /var/log/utime-log/start-up-log/start-up.log
 
