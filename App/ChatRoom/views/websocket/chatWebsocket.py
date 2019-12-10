@@ -18,11 +18,12 @@ class ChatRoomBaseWebsocket(AsyncWebsocketConsumer):
     async def connect(self):
         room_id = self.scope['url_route']['kwargs']['rid']
         chatRoom = ChatRoom.objects.filter(chatRoomID=room_id)
-        uid = self.scope['cookies'].get('uid', '')
+        # uid = self.scope['cookies'].get('uid', '')
+        uid = 998284405
         if not chatRoom.exists() or uid == '':  # 房间不存在或者用户id不存在
             await self.close()  # 拒绝连接
         else:
-            self.user = UserInfo.objects.get(id=self.scope['cookies'].get('uid', ''))  # 用户对象
+            self.user = UserInfo.objects.get(id=uid)  # 用户对象
             self.chatRoom = chatRoom[0]  # 聊天室对象
             self.nickname = self.user.nickname  # 发言人昵称
             # 加入房间
