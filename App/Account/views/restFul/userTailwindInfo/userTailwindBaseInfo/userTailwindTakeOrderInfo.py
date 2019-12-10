@@ -1,4 +1,4 @@
-from App.Tailwind.models import TailwindRequest, TailwindTakeOrder
+from App.Tailwind.models import TailwindRequest, TailwindTakeOrder, TakeOrderUserRealtimeLocation
 # from App.Account.models import UserInfo
 from django.http import JsonResponse
 from django.db.models import Q
@@ -8,9 +8,6 @@ from Common.dictInfo import model_to_dict
 from Common.dateInfo import get_three_month_ago
 from Common.userAuthCommon import check_login, getUser, checkStudent
 from rest_framework.views import APIView
-
-
-# import json, datetime, oss2
 
 
 class UserTailwindTakeOrderView(APIView):
@@ -63,7 +60,7 @@ class UserTailwindTakeOrderView(APIView):
         :return:
         """
         try:
-            user = getUser(request.session.get('login'))
+            user = getUser(request.session.get('login'))  # 接单人对象
             tailwindRequest = getRequest(rid)
             if not tailwindRequest:
                 return JsonResponse({
@@ -87,9 +84,12 @@ class UserTailwindTakeOrderView(APIView):
             # 修改request单的状态
             tailwindRequest.status = 'orderT'
             tailwindRequest.save()
+            # 新建实时位置数据库对象
+            realLocation = TakeOrderUserRealtimeLocation.objects.create(relateTakeOrder=newTakeOrder)
             return JsonResponse({
                 'status': True,
-                'newTakeID': newTakeOrder.takeID
+                'newTakeID': newTakeOrder.takeID,
+                'real_location': realLocation.id
             })
         except Exception as ex:
             return JsonResponse({

@@ -48,7 +48,7 @@ class ChatRoomBaseWebsocket(AsyncWebsocketConsumer):
         except Exception as ex:
             print(str(ex))
 
-    async def receive(self, text_data, bytes_data=None):
+    async def receive(self, text_data=None, bytes_data=None):
         message = text_data
         ChatLog.objects.create(
             related_chat_room_id=self.chatRoom.chatRoomID,

@@ -39,7 +39,7 @@ case $1 in
         uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/utime-log/`date +%Y%m%d`/utime.log --module UTime.wsgi &
 
         echo " `date +%Y%m%d%H%M%S` UTime重启成功 " >> /var/log/utime-log/start-up-log/start-up.log
-        
+
         echo "UTime重启成功"
 
         rm tmp
