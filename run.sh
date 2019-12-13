@@ -5,23 +5,32 @@ case $1 in
         if [ ! -d "/var/log/utime-log/`date +%Y%m%d`" ];then
             mkdir /var/log/utime-log/`date +%Y%m%d`
         fi
-        # 启动UTiime服务命令
+        # 启动uwsgi服务
         uwsgi --socket :8000 --buffer-size 32768 --daemonize /var/log/utime-log/`date +%Y%m%d`/utime.log --module UTime.wsgi --http-websockets &
+        # 启动daphne服务
+        daphne -p 8080 UTime.asgi:application &
         # 加入启动日志
         echo " `date +%Y%m%d%H%M%S` UTime已启动 " >> /var/log/utime-log/start-up-log/start-up.log
 
         echo "UTime已启动"
     ;;
     "down")
-        port=8000
-        lsof -i :$port | awk '{print $2}' > tmp
+        # 关闭uwsgi服务
+        uport=8000
+        lsof -i :$uport | awk '{print $2}' > tmp
         pid=$(awk 'NR==2{print}' tmp);
-
         kill -9 $pid
+        rm tmp
+        # 关闭dephne服务
+        dport=8080
+        lsof -i:dport | awk '{print $2}' > tmp
+        dpid=$(awk 'NR==2{print}' tmp);
+        kill -9 $dpid
+        rm tmp
 
         echo "UTime已经关闭"
 
-        rm tmp
+
     ;;
     "restart")
         port=8000
